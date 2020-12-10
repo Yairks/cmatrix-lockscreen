@@ -20,4 +20,4 @@ config.sub
 configure
 depcomp
 install-sh
-config.in*
+config.h.in*
