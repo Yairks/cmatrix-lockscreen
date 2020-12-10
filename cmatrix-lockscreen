@@ -1,4 +1,4 @@
 #!/bin/bash
 
-# sudo /home/yair/Documents/random-repos/xtrlock/xtrlock
-gnome-terminal --full-screen --window-with-profile matrix -- bash -c 'sleep 0.4; /usr/local/bin/xtrlock-modified'
+gnome-terminal --full-screen --window-with-profile matrix -- bash -c 'sleep 0.4; xtrlock-modified'
+# osascript -e 'tell application "Terminal" to do script "bash -c xtrlock-modified"'
