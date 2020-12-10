@@ -1,4 +1,4 @@
 #!/bin/bash
 
 gnome-terminal --full-screen --window-with-profile matrix -- bash -c 'sleep 0.4; xtrlock-modified'
-# osascript -e 'tell application "Terminal" to do script "bash -c xtrlock-modified"'
+# osascript -e "tell application \"Terminal\" to do script \"bash -c \"sleep 0.4; xtrlock-modified\"\""
