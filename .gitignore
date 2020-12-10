@@ -1,2 +1,11 @@
 config.log
 config.status
+.deps/
+Makefile
+cmatrix-modified
+cmatrix-modified.o
+config.h
+matrixlockscreen.spec
+stamp-h1
+xtrlock-modified
+xtrlock-modified.o
