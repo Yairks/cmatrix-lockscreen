@@ -7,7 +7,7 @@ When you run it, the computer will lock and show the epic display from The Matri
 TODO: INSERT GIF of program in action  
 
 ### Installing
-To install the program, navigate to the cmatrix-lockscreen directory and run:  
+To install the program, clone this repository (or just download the zip), navigate to the cmatrix-lockscreen directory and run:  
 ```
 autoreconf -i
 ./configure
