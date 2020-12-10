@@ -32,14 +32,14 @@ AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(putenv)
 
 dnl Checks for libraries.
-AC_CHECK_HEADERS(curses.h ncurses.h X11/X.h)
+AC_CHECK_HEADERS(curses.h ncurses.h X11/X.h shadow.h)
 
 CURSES_LIB_NAME=""
 AC_CHECK_LIB(X11, XOpenDisplay, X11_LIB="-lX11")
 AC_CHECK_LIB(crypt, crypt, CRYPT_LIB="-lcrypt")
 AC_CHECK_LIB(ncurses, tgetent, CURSES_LIB="-lncurses" CURSES_LIB_NAME=ncurses)
+AC_CHECK_HEADER([shadow.h], [AC_DEFINE([SHADOW_PWD], [1], [Define if shadow.h exists.])])
 
-AC_DEFINE([SHADOW_PWD], [], [Description])
 
 if eval "test x$CURSES_LIB_NAME = x"
 then

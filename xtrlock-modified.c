@@ -43,7 +43,8 @@
 #include <time.h>
 
 /* I really shouldn't do this... */
-#define SHADOW_PWD
+/* #define SHADOW_PWD
+ * There. I didn't do it. */
 #ifdef SHADOW_PWD
 #include <shadow.h>
 #endif
