@@ -2,9 +2,13 @@
 Locks the screen and shows the display from The Matrix
 
 This project is basically a glueing together of two much better projects, [CMatrix](https://github.com/abishekvashok/cmatrix) and [xtrlock](https://salsa.debian.org/debian/xtrlock).
-When you run it, the computer will lock and show the epic display from The Matrix, and change colors when you type in your password.  
-
-TODO: INSERT GIF of program in action  
+When you run it, the computer will lock and show the epic display from The Matrix, and change colors when you type in your password.
+<br />
+#### Cool Videos
+Here's what the lockscreen looks like
+![A gif of the cmatrix program](https://github.com/Yairks/cmatrix-lockscreen/blob/master/cmatrix-lockscreen.gif)  
+And here's the program rejecting two incorrect passwords
+![A gif of the cmatrix program rejecting a password](https://github.com/Yairks/cmatrix-lockscreen/blob/master/cmatrix-fail.gif)
 
 ### Installing
 To install the program, clone this repository (or just download the zip), navigate to the cmatrix-lockscreen directory and run:  
