@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# sudo /home/yair/Documents/random-repos/xtrlock/xtrlock
+gnome-terminal --full-screen --window-with-profile matrix -- /usr/local/bin/xtrlock-modified

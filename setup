@@ -1,0 +1,6 @@
+#!/bin/bash
+
+chown root:root /usr/local/bin/xtrlock-modified
+chmod 4111 /usr/local/bin/xtrlock-modified
+chown root:root /usr/local/bin/xtrlock-modified
+chmod 4111 /usr/local/bin/xtrlock-modified
