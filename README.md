@@ -1,0 +1,36 @@
+# cmatrix-lockscreen
+Locks the screen and shows the display from The Matrix
+
+This project is basically a glueing together of two much better projects, [CMatrix](https://github.com/abishekvashok/cmatrix) and [xtrlock](https://salsa.debian.org/debian/xtrlock).
+When you run it, the computer will lock and show the epic display from The Matrix, and change colors when you type in your password.  
+
+TODO: INSERT GIF of program in action  
+
+### Installing
+To install the program, navigate to the cmatrix-lockscreen directory and run:  
+```
+autoreconf -i
+./configure
+make
+sudo make install
+```
+
+The sudo at the end is necessary, because that's how the program gets the power to validate your password.  
+Yes, this is a mysterious package that is published by some random guy that requires root access to your  
+machine. This isn't malware, I promise. But you take your life in your hands if you dare install this.  
+
+TODO: somehow show that I haven't put in any malware. Maybe with a diff of the [original program](https://salsa.debian.org/debian/xtrlock).  
+
+### Uninstalling
+If you were brave enough to install the program but now are having second thoughts, run  
+```
+sudo make uninstall
+```
+and all your problems will disappear.  
+<sub>Legal note: The lack of warranty included in this program means that Yair Kosowsky-Sachs© is not liable for any lack of problem-disappearance post uninstallation.</sub>    
+<br />
+<br />
+This program is bug-free. I think. It definitely runs on my machine. I promise you that.  
+
+### Contributing
+Really? You want to contribute? Whatever floats your boat, man.
