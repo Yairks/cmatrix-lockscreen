@@ -16,8 +16,7 @@ sudo make install
 ```
 
 The sudo at the end is necessary, because that's how the program gets the power to validate your password.  
-Yes, this is a mysterious package that is published by some random guy that requires root access to your  
-machine. This isn't malware, I promise. But you take your life in your hands if you dare install this.  
+Yes, this is a mysterious package that is published by some random guy that requires root access to your machine. This isn't malware, I promise. But you take your life in your hands if you dare install this.  
 
 TODO: somehow show that I haven't put in any malware. Maybe with a diff of the [original program](https://salsa.debian.org/debian/xtrlock).  
 
