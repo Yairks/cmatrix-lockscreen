@@ -1,25 +1,25 @@
 /*
-    cmatrix.c
+   cmatrix.c
 
-    Copyright (C) 1999-2017 Chris Allegretta
-    Copyright (C) 2017-Present Abishek V Ashok
+   Copyright (C) 1999-2017 Chris Allegretta
+   Copyright (C) 2017-Present Abishek V Ashok
 
-    This file is part of cmatrix.
+   This file is part of cmatrix.
 
-    cmatrix is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+   cmatrix is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
-    cmatrix is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+   cmatrix is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with cmatrix. If not, see <http://www.gnu.org/licenses/>.
+   You should have received a copy of the GNU General Public License
+   along with cmatrix. If not, see <http://www.gnu.org/licenses/>.
 
-*/
+ */
 
 #include <errno.h>
 #include <stdio.h>
@@ -139,33 +139,33 @@ void c_die(char *msg, ...) {
 
 void usage(void) {
     /* printf(" Usage: cmatrix -[abBcfhlsmVxk] [-u delay] [-C color] [-t tty] [-M message]\n");
-    printf(" -a: Asynchronous scroll\n");
-    printf(" -b: Bold characters on\n");
-    printf(" -B: All bold characters (overrides -b)\n");
-    printf(" -c: Use Japanese characters as seen in the original matrix. Requires appropriate fonts\n");
-    printf(" -f: Force the linux $TERM type to be on\n");
-    printf(" -l: Linux mode (uses matrix console font)\n");
-    printf(" -L: Lock mode (can be closed from another terminal)\n");
-    printf(" -o: Use old-style scrolling\n");
-    printf(" -h: Print usage and exit\n");
-    printf(" -n: No bold characters (overrides -b and -B, default)\n");
-    printf(" -s: \"Screensaver\" mode, exits on first keystroke\n");
-    printf(" -x: X window mode, use if your xterm is using mtx.pcf\n");
-    printf(" -V: Print version information and exit\n");
-    printf(" -M [message]: Prints your message in the center of the screen. Overrides -L's default message.\n");
-    printf(" -u delay (0 - 10, default 4): Screen update delay\n");
-    printf(" -C [color]: Use this color for matrix (default green)\n");
-    printf(" -r: rainbow mode\n");
-    printf(" -m: lambda mode\n");
-    printf(" -k: Characters change while scrolling. (Works without -o opt.)\n");
-    printf(" -t [tty]: Set tty to use\n");
-    */
+       printf(" -a: Asynchronous scroll\n");
+       printf(" -b: Bold characters on\n");
+       printf(" -B: All bold characters (overrides -b)\n");
+       printf(" -c: Use Japanese characters as seen in the original matrix. Requires appropriate fonts\n");
+       printf(" -f: Force the linux $TERM type to be on\n");
+       printf(" -l: Linux mode (uses matrix console font)\n");
+       printf(" -L: Lock mode (can be closed from another terminal)\n");
+       printf(" -o: Use old-style scrolling\n");
+       printf(" -h: Print usage and exit\n");
+       printf(" -n: No bold characters (overrides -b and -B, default)\n");
+       printf(" -s: \"Screensaver\" mode, exits on first keystroke\n");
+       printf(" -x: X window mode, use if your xterm is using mtx.pcf\n");
+       printf(" -V: Print version information and exit\n");
+       printf(" -M [message]: Prints your message in the center of the screen. Overrides -L's default message.\n");
+       printf(" -u delay (0 - 10, default 4): Screen update delay\n");
+       printf(" -C [color]: Use this color for matrix (default green)\n");
+       printf(" -r: rainbow mode\n");
+       printf(" -m: lambda mode\n");
+       printf(" -k: Characters change while scrolling. (Works without -o opt.)\n");
+       printf(" -t [tty]: Set tty to use\n");
+     */
     printf("This is a modified cmatrix. Don't call it directly unless you're testing something\n");
 }
 
 void version(void) {
     printf(" CMatrix version %s (compiled %s, %s)\n",
-        VERSION, __TIME__, __DATE__);
+            VERSION, __TIME__, __DATE__);
     printf("Email: abishekvashok@gmail.com\n");
     printf("Web: https://github.com/abishekvashok/cmatrix\n");
 
@@ -264,11 +264,11 @@ void resize_screen(void) {
         return;
 #endif
 #ifdef _WIN32
-    result = GetConsoleScreenBufferInfo(hStdHandle, &csbiInfo);
-    if(!result)
-        return;
-    LINES = csbiInfo.dwSize.Y;
-    COLS = csbiInfo.dwSize.X;
+        result = GetConsoleScreenBufferInfo(hStdHandle, &csbiInfo);
+        if(!result)
+            return;
+        LINES = csbiInfo.dwSize.Y;
+        COLS = csbiInfo.dwSize.X;
 #else
     }
     int fd = open(tty, O_RDWR);
@@ -340,93 +340,93 @@ int main(int argc, char *argv[]) {
     opterr = 0;
     while ((optchr = getopt(argc, argv, "abBcfhlLnrosmxkVM:u:C:t:")) != EOF) {
         switch (optchr) {
-        case 's':
-            screensaver = 1;
-            break;
-        case 'a':
-            asynch = 1;
-            break;
-        case 'b':
-            if (bold != 2) {
-                bold = 1;
-            }
-            break;
-        case 'B':
-            bold = 2;
-            break;
-        case 'C':
-            if (!strcasecmp(optarg, "green")) {
-                mcolor = COLOR_GREEN;
-            } else if (!strcasecmp(optarg, "red")) {
-                mcolor = COLOR_RED;
-            } else if (!strcasecmp(optarg, "blue")) {
-                mcolor = COLOR_BLUE;
-            } else if (!strcasecmp(optarg, "white")) {
-                mcolor = COLOR_WHITE;
-            } else if (!strcasecmp(optarg, "yellow")) {
-                mcolor = COLOR_YELLOW;
-            } else if (!strcasecmp(optarg, "cyan")) {
-                mcolor = COLOR_CYAN;
-            } else if (!strcasecmp(optarg, "magenta")) {
-                mcolor = COLOR_MAGENTA;
-            } else if (!strcasecmp(optarg, "black")) {
-                mcolor = COLOR_BLACK;
-            } else {
-                c_die(" Invalid color selection\n Valid "
-                       "colors are green, red, blue, "
-                       "white, yellow, cyan, magenta " "and black.\n");
-            }
-            break;
-        case 'c':
-            classic = 1;
-            break;
-        case 'f':
-            force = 1;
-            break;
-        case 'l':
-            console = 1;
-            break;
-        case 'L':
-            lock = 1;
-            //if -M was used earlier, don't override it
-            if(msg == ""){
-                msg = "Computer locked.";
-            }
-            break;
-        case 'M':
-            msg = strdup(optarg);
-            break;
-        case 'n':
-            bold = -1;
-            break;
-        case 'h':
-        case '?':
-            usage();
-            exit(0);
-        case 'o':
-            oldstyle = 1;
-            break;
-        case 'u':
-            update = atoi(optarg);
-            break;
-        case 'x':
-            xwindow = 1;
-            break;
-        case 'V':
-            version();
-            exit(0);
-        case 'r':
-            rainbow = 1;
-            break;
-        case 'm':
-            lambda = 1;
-            break;
-        case 'k':
-            changes = 1;
-            break;
-        case 't':
-            tty = optarg;
-            break;
+            case 's':
+                screensaver = 1;
+                break;
+            case 'a':
+                asynch = 1;
+                break;
+            case 'b':
+                if (bold != 2) {
+                    bold = 1;
+                }
+                break;
+            case 'B':
+                bold = 2;
+                break;
+            case 'C':
+                if (!strcasecmp(optarg, "green")) {
+                    mcolor = COLOR_GREEN;
+                } else if (!strcasecmp(optarg, "red")) {
+                    mcolor = COLOR_RED;
+                } else if (!strcasecmp(optarg, "blue")) {
+                    mcolor = COLOR_BLUE;
+                } else if (!strcasecmp(optarg, "white")) {
+                    mcolor = COLOR_WHITE;
+                } else if (!strcasecmp(optarg, "yellow")) {
+                    mcolor = COLOR_YELLOW;
+                } else if (!strcasecmp(optarg, "cyan")) {
+                    mcolor = COLOR_CYAN;
+                } else if (!strcasecmp(optarg, "magenta")) {
+                    mcolor = COLOR_MAGENTA;
+                } else if (!strcasecmp(optarg, "black")) {
+                    mcolor = COLOR_BLACK;
+                } else {
+                    c_die(" Invalid color selection\n Valid "
+                            "colors are green, red, blue, "
+                            "white, yellow, cyan, magenta " "and black.\n");
+                }
+                break;
+            case 'c':
+                classic = 1;
+                break;
+            case 'f':
+                force = 1;
+                break;
+            case 'l':
+                console = 1;
+                break;
+            case 'L':
+                lock = 1;
+                //if -M was used earlier, don't override it
+                if(msg == ""){
+                    msg = "Computer locked.";
+                }
+                break;
+            case 'M':
+                msg = strdup(optarg);
+                break;
+            case 'n':
+                bold = -1;
+                break;
+            case 'h':
+            case '?':
+                usage();
+                exit(0);
+            case 'o':
+                oldstyle = 1;
+                break;
+            case 'u':
+                update = atoi(optarg);
+                break;
+            case 'x':
+                xwindow = 1;
+                break;
+            case 'V':
+                version();
+                exit(0);
+            case 'r':
+                rainbow = 1;
+                break;
+            case 'm':
+                lambda = 1;
+                break;
+            case 'k':
+                changes = 1;
+                break;
+            case 't':
+                tty = optarg;
+                break;
         }
     }
 
@@ -471,7 +471,7 @@ int main(int argc, char *argv[]) {
     signal(SIGTSTP, sighandler);
 #endif
 
-if (console) {
+    if (console) {
 #ifdef HAVE_CONSOLECHARS
         if (va_system("consolechars -f matrix") != 0) {
             c_die
@@ -487,7 +487,7 @@ if (console) {
 #else
         c_die(" Unable to use both \"setfont\" and \"consolechars\".\n");
 #endif
-}
+    }
     if (has_colors()) {
         start_color();
         /* Add in colors, if available */
@@ -503,424 +503,424 @@ if (console) {
             init_pair(COLOR_YELLOW, COLOR_YELLOW, -1);
         } else {
 #else
-        { /* Hack to deal the after effects of else in HAVE_USE_DEFAULT_COLOURS*/
+            { /* Hack to deal the after effects of else in HAVE_USE_DEFAULT_COLOURS*/
 #endif
-            init_pair(COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
-            init_pair(COLOR_GREEN, COLOR_GREEN, COLOR_BLACK);
-            init_pair(COLOR_WHITE, COLOR_WHITE, COLOR_BLACK);
-            init_pair(COLOR_RED, COLOR_RED, COLOR_BLACK);
-            init_pair(COLOR_CYAN, COLOR_CYAN, COLOR_BLACK);
-            init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
-            init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
-            init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
-        }
-    }
-
-    /* Set up values for random number generation */
-    if(classic) {
-        /* Japanese character unicode range [they are seen in the original cmatrix] */
-        randmin = 12288;
-        highnum = 12351;
-    } else if (console || xwindow) {
-        randmin = 166;
-        highnum = 217;
-    } else {
-        randmin = 33;
-        highnum = 123;
-    }
-    randnum = highnum - randmin;
-
-    var_init();
-
-    /* The program needs to change its behavior or SIGSTOP depending on time idle */
-    int current_time = (int)time(NULL);
-
-    while (1) {
-#ifndef _WIN32
-        /* Check for signals */
-        if (signal_status == SIGINT || signal_status == SIGQUIT) {
-            if(lock != 1)
-                finish();
-            /* exits */
-        }
-        if (signal_status == SIGWINCH) {
-            resize_screen();
-            signal_status = 0;
-        }
-
-        if(signal_status == SIGTSTP){
-            if(lock != 1)
-                    finish();
-        }
-#endif
-
-	/* After 1 second, turn off any modified lines*/
-	if((int)time(NULL) - current_time > 1) {
-	    change_some_lines = 0;
-	    mcolor = COLOR_GREEN;
-	}
-
-	/* After five minutes, pause the display.
-	This is because cmatrix takes a good chunk of CPU,
-	and there's no reason it should keep going if 
-	no one's watching.
-        The program is restarted whenever the parent (xtrlock) 
-        tells it to wakeup. */
-	else if ((int)time(NULL) - current_time > 300) {
-	    raise(SIGSTOP);
-	    current_time = (int)time(NULL);
-	}
-
-        count++;
-        if (count > 4) {
-            count = 1;
-        }
-
-        if ((keypress = wgetch(stdscr)) != ERR) {
-	    /* Update the current time so the program doesn't SIGSTOP itself */
-	    current_time = (int)time(NULL);
-
-            if (screensaver == 1) {
-#ifdef USE_TIOCSTI
-                char *str = malloc(0);
-                size_t str_len = 0;
-                do {
-                    str = realloc(str, str_len + 1);
-                    str[str_len++] = keypress;
-                } while ((keypress = wgetch(stdscr)) != ERR);
-                size_t i;
-                for (i = 0; i < str_len; i++)
-                    ioctl(STDIN_FILENO, TIOCSTI, (char*)(str + i));
-                free(str);
-#endif
-                finish();
-            } else {
-                switch (keypress) {
-#ifdef _WIN32
-                case 3: /* Ctrl-C. Fall through */
-#endif
-                case 'q':
-                    if(lock != 1)
-                        finish();
-                    break;
-                case 'a':
-                    asynch = 1 - asynch;
-                    break;
-                case 'b':
-                    bold = 1;
-                    break;
-                case 'B':
-                    bold = 2;
-                    break;
-                case 'L':
-                    lock = 1;
-                    break;
-                case 'n':
-                    bold = 0;
-                    break;
-                case '0': /* Fall through */
-                case '1': /* Fall through */
-                case '2': /* Fall through */
-                case '3': /* Fall through */
-                case '4': /* Fall through */
-                case '5': /* Fall through */
-                case '6': /* Fall through */
-                case '7': /* Fall through */
-                case '8': /* Fall through */
-                case '9':
-                    update = keypress - 48;
-                    break;
-                case '!':
-                    mcolor = COLOR_RED;
-                    rainbow = 0;
-		    
-		    /* Because they got the password wrong.
-		    They don't deserve to see highlighted lines anymore. */
-		    change_some_lines = 0; 
-		    which_lines_changed = 0;
-                    break;
-                case '@':
-                    mcolor = COLOR_GREEN;
-                    rainbow = 0;
-                    break;
-                case '#':
-                    mcolor = COLOR_YELLOW;
-                    rainbow = 0;
-                    break;
-                case '$':
-                    mcolor = COLOR_BLUE;
-                    rainbow = 0;
-                    break;
-                case '%':
-                    mcolor = COLOR_MAGENTA;
-                    rainbow = 0;
-                    break;
-                case 'r':
-                     rainbow = 1;
-                     break;
-                case 'm':
-                     lambda = !lambda;
-                     break;
-                case '^':
-                    mcolor = COLOR_CYAN;
-                    rainbow = 0;
-                    break;
-                case '&':
-                    mcolor = COLOR_WHITE;
-                    rainbow = 0;
-                    break;
-                case 'p':
-                case 'P':
-                    pause = (pause == 0)?1:0;
-                    break;
-                case 'z':
-		    change_some_lines = 1;
-		    which_lines_changed += 20;
-		    break;
-                }
+                init_pair(COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
+                init_pair(COLOR_GREEN, COLOR_GREEN, COLOR_BLACK);
+                init_pair(COLOR_WHITE, COLOR_WHITE, COLOR_BLACK);
+                init_pair(COLOR_RED, COLOR_RED, COLOR_BLACK);
+                init_pair(COLOR_CYAN, COLOR_CYAN, COLOR_BLACK);
+                init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
+                init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
+                init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
             }
         }
-        for (j = 0; j <= COLS - 1; j += 2) {
-            if ((count > updates[j] || asynch == 0) && pause == 0) {
 
-                /* I dont like old-style scrolling, yuck */
-                if (oldstyle) {
-                    for (i = LINES - 1; i >= 1; i--) {
-                        matrix[i][j].val = matrix[i - 1][j].val;
+        /* Set up values for random number generation */
+        if(classic) {
+            /* Japanese character unicode range [they are seen in the original cmatrix] */
+            randmin = 12288;
+            highnum = 12351;
+        } else if (console || xwindow) {
+            randmin = 166;
+            highnum = 217;
+        } else {
+            randmin = 33;
+            highnum = 123;
+        }
+        randnum = highnum - randmin;
+
+        var_init();
+
+        /* The program needs to change its behavior or SIGSTOP depending on time idle */
+        int current_time = (int)time(NULL);
+
+        while (1) {
+#ifndef _WIN32
+            /* Check for signals */
+            if (signal_status == SIGINT || signal_status == SIGQUIT) {
+                if(lock != 1)
+                    finish();
+                /* exits */
+            }
+            if (signal_status == SIGWINCH) {
+                resize_screen();
+                signal_status = 0;
+            }
+
+            if(signal_status == SIGTSTP){
+                if(lock != 1)
+                    finish();
+            }
+#endif
+
+            /* After 1 second, turn off any modified lines*/
+            if((int)time(NULL) - current_time > 1) {
+                change_some_lines = 0;
+                mcolor = COLOR_GREEN;
+            }
+
+            /* After five minutes, pause the display.
+               This is because cmatrix takes a good chunk of CPU,
+               and there's no reason it should keep going if 
+               no one's watching.
+               The program is restarted whenever the parent (xtrlock) 
+               tells it to wakeup. */
+            else if ((int)time(NULL) - current_time > 300) {
+                raise(SIGSTOP);
+                current_time = (int)time(NULL);
+            }
+
+            count++;
+            if (count > 4) {
+                count = 1;
+            }
+
+            if ((keypress = wgetch(stdscr)) != ERR) {
+                /* Update the current time so the program doesn't SIGSTOP itself */
+                current_time = (int)time(NULL);
+
+                if (screensaver == 1) {
+#ifdef USE_TIOCSTI
+                    char *str = malloc(0);
+                    size_t str_len = 0;
+                    do {
+                        str = realloc(str, str_len + 1);
+                        str[str_len++] = keypress;
+                    } while ((keypress = wgetch(stdscr)) != ERR);
+                    size_t i;
+                    for (i = 0; i < str_len; i++)
+                        ioctl(STDIN_FILENO, TIOCSTI, (char*)(str + i));
+                    free(str);
+#endif
+                    finish();
+                } else {
+                    switch (keypress) {
+#ifdef _WIN32
+                        case 3: /* Ctrl-C. Fall through */
+#endif
+                        case 'q':
+                            if(lock != 1)
+                                finish();
+                            break;
+                        case 'a':
+                            asynch = 1 - asynch;
+                            break;
+                        case 'b':
+                            bold = 1;
+                            break;
+                        case 'B':
+                            bold = 2;
+                            break;
+                        case 'L':
+                            lock = 1;
+                            break;
+                        case 'n':
+                            bold = 0;
+                            break;
+                        case '0': /* Fall through */
+                        case '1': /* Fall through */
+                        case '2': /* Fall through */
+                        case '3': /* Fall through */
+                        case '4': /* Fall through */
+                        case '5': /* Fall through */
+                        case '6': /* Fall through */
+                        case '7': /* Fall through */
+                        case '8': /* Fall through */
+                        case '9':
+                            update = keypress - 48;
+                            break;
+                        case '!':
+                            mcolor = COLOR_RED;
+                            rainbow = 0;
+
+                            /* Because they got the password wrong.
+                               They don't deserve to see highlighted lines anymore. */
+                            change_some_lines = 0; 
+                            which_lines_changed = 0;
+                            break;
+                        case '@':
+                            mcolor = COLOR_GREEN;
+                            rainbow = 0;
+                            break;
+                        case '#':
+                            mcolor = COLOR_YELLOW;
+                            rainbow = 0;
+                            break;
+                        case '$':
+                            mcolor = COLOR_BLUE;
+                            rainbow = 0;
+                            break;
+                        case '%':
+                            mcolor = COLOR_MAGENTA;
+                            rainbow = 0;
+                            break;
+                        case 'r':
+                            rainbow = 1;
+                            break;
+                        case 'm':
+                            lambda = !lambda;
+                            break;
+                        case '^':
+                            mcolor = COLOR_CYAN;
+                            rainbow = 0;
+                            break;
+                        case '&':
+                            mcolor = COLOR_WHITE;
+                            rainbow = 0;
+                            break;
+                        case 'p':
+                        case 'P':
+                            pause = (pause == 0)?1:0;
+                            break;
+                        case 'z':
+                            change_some_lines = 1;
+                            which_lines_changed += 20;
+                            break;
                     }
-                    random = (int) rand() % (randnum + 8) + randmin;
+                }
+            }
+            for (j = 0; j <= COLS - 1; j += 2) {
+                if ((count > updates[j] || asynch == 0) && pause == 0) {
 
-                    if (matrix[1][j].val == 0) {
-                        matrix[0][j].val = 1;
-                    } else if (matrix[1][j].val == ' '
-                             || matrix[1][j].val == -1) {
-                        if (spaces[j] > 0) {
-                            matrix[0][j].val = ' ';
-                            spaces[j]--;
-                        } else {
+                    /* I dont like old-style scrolling, yuck */
+                    if (oldstyle) {
+                        for (i = LINES - 1; i >= 1; i--) {
+                            matrix[i][j].val = matrix[i - 1][j].val;
+                        }
+                        random = (int) rand() % (randnum + 8) + randmin;
 
-                            /* Random number to determine whether head of next collumn
-                               of chars has a white 'head' on it. */
-
-                            if (((int) rand() % 3) == 1) {
-                                matrix[0][j].val = 0;
+                        if (matrix[1][j].val == 0) {
+                            matrix[0][j].val = 1;
+                        } else if (matrix[1][j].val == ' '
+                                || matrix[1][j].val == -1) {
+                            if (spaces[j] > 0) {
+                                matrix[0][j].val = ' ';
+                                spaces[j]--;
                             } else {
-                                matrix[0][j].val = (int) rand() % randnum + randmin;
+
+                                /* Random number to determine whether head of next collumn
+                                   of chars has a white 'head' on it. */
+
+                                if (((int) rand() % 3) == 1) {
+                                    matrix[0][j].val = 0;
+                                } else {
+                                    matrix[0][j].val = (int) rand() % randnum + randmin;
+                                }
+                                spaces[j] = (int) rand() % LINES + 1;
                             }
+                        } else if (random > highnum && matrix[1][j].val != 1) {
+                            matrix[0][j].val = ' ';
+                        } else {
+                            matrix[0][j].val = (int) rand() % randnum + randmin;
+                        }
+
+                    } else { /* New style scrolling (default) */
+                        if (matrix[0][j].val == -1 && matrix[1][j].val == ' '
+                                && spaces[j] > 0) {
+                            spaces[j]--;
+                        } else if (matrix[0][j].val == -1
+                                && matrix[1][j].val == ' ') {
+                            length[j] = (int) rand() % (LINES - 3) + 3;
+                            matrix[0][j].val = (int) rand() % randnum + randmin;
+
                             spaces[j] = (int) rand() % LINES + 1;
                         }
-                    } else if (random > highnum && matrix[1][j].val != 1) {
-                        matrix[0][j].val = ' ';
-                    } else {
-                        matrix[0][j].val = (int) rand() % randnum + randmin;
-                    }
-
-                } else { /* New style scrolling (default) */
-                    if (matrix[0][j].val == -1 && matrix[1][j].val == ' '
-                        && spaces[j] > 0) {
-                        spaces[j]--;
-                    } else if (matrix[0][j].val == -1
-                        && matrix[1][j].val == ' ') {
-                        length[j] = (int) rand() % (LINES - 3) + 3;
-                        matrix[0][j].val = (int) rand() % randnum + randmin;
-
-                        spaces[j] = (int) rand() % LINES + 1;
-                    }
-                    i = 0;
-                    y = 0;
-                    firstcoldone = 0;
-                    while (i <= LINES) {
-
-                        /* Skip over spaces */
-                        while (i <= LINES && (matrix[i][j].val == ' ' ||
-                               matrix[i][j].val == -1)) {
-                            i++;
-                        }
-
-                        if (i > LINES) {
-                            break;
-                        }
-
-                        /* Go to the head of this collumn */
-                        z = i;
+                        i = 0;
                         y = 0;
-                        while (i <= LINES && (matrix[i][j].val != ' ' &&
-                               matrix[i][j].val != -1)) {
-                            matrix[i][j].is_head = false;
-                            if(changes) {
-                                if(rand() % 8 == 0)
-                                    matrix[i][j].val = (int) rand() % randnum + randmin;
+                        firstcoldone = 0;
+                        while (i <= LINES) {
+
+                            /* Skip over spaces */
+                            while (i <= LINES && (matrix[i][j].val == ' ' ||
+                                        matrix[i][j].val == -1)) {
+                                i++;
                             }
+
+                            if (i > LINES) {
+                                break;
+                            }
+
+                            /* Go to the head of this collumn */
+                            z = i;
+                            y = 0;
+                            while (i <= LINES && (matrix[i][j].val != ' ' &&
+                                        matrix[i][j].val != -1)) {
+                                matrix[i][j].is_head = false;
+                                if(changes) {
+                                    if(rand() % 8 == 0)
+                                        matrix[i][j].val = (int) rand() % randnum + randmin;
+                                }
+                                i++;
+                                y++;
+                            }
+
+                            if (i > LINES) {
+                                matrix[z][j].val = ' ';
+                                continue;
+                            }
+
+                            matrix[i][j].val = (int) rand() % randnum + randmin;
+                            matrix[i][j].is_head = true;
+
+                            /* If we're at the top of the collumn and it's reached its
+                               full length (about to start moving down), we do this
+                               to get it moving.  This is also how we keep segments not
+                               already growing from growing accidentally =>
+                             */
+                            if (y > length[j] || firstcoldone) {
+                                matrix[z][j].val = ' ';
+                                matrix[0][j].val = -1;
+                            }
+                            firstcoldone = 1;
                             i++;
-                            y++;
                         }
-
-                        if (i > LINES) {
-                            matrix[z][j].val = ' ';
-                            continue;
-                        }
-
-                        matrix[i][j].val = (int) rand() % randnum + randmin;
-                        matrix[i][j].is_head = true;
-
-                        /* If we're at the top of the collumn and it's reached its
-                           full length (about to start moving down), we do this
-                           to get it moving.  This is also how we keep segments not
-                           already growing from growing accidentally =>
-                         */
-                        if (y > length[j] || firstcoldone) {
-                            matrix[z][j].val = ' ';
-                            matrix[0][j].val = -1;
-                        }
-                        firstcoldone = 1;
-                        i++;
                     }
                 }
-            }
-            /* A simple hack */
-            if (!oldstyle) {
-                y = 1;
-                z = LINES;
-            } else {
-                y = 0;
-                z = LINES - 1;
-            }
-            for (i = y; i <= z; i++) {
-                move(i - y, j);
-
-                if (matrix[i][j].val == 0 || (matrix[i][j].is_head && !rainbow)) {
-                    if (console || xwindow) {
-                        attron(A_ALTCHARSET);
-                    }
-                    attron(COLOR_PAIR(COLOR_WHITE));
-                    if (bold) {
-                        attron(A_BOLD);
-                    }
-                    if (matrix[i][j].val == 0) {
-                        if (console || xwindow) {
-                            addch(183);
-                        } else {
-                            addch('&');
-                        }
-                    } else {
-                        addch(matrix[i][j].val);
-                    }
-
-                    attroff(COLOR_PAIR(COLOR_WHITE));
-                    if (bold) {
-                        attroff(A_BOLD);
-                    }
-                    if (console || xwindow) {
-                        attroff(A_ALTCHARSET);
-                    }
-
+                /* A simple hack */
+                if (!oldstyle) {
+                    y = 1;
+                    z = LINES;
                 } else {
-		    if (change_some_lines) {
-		        int lines = which_lines_changed % (COLS - 1); 
-		        if(change_some_lines && lines - j >= 0 && lines - j < 20) {
-		    	        mcolor = COLOR_MAGENTA;
-		        }
+                    y = 0;
+                    z = LINES - 1;
+                }
+                for (i = y; i <= z; i++) {
+                    move(i - y, j);
 
-		        else {
-			        mcolor = COLOR_GREEN;
-		        }
-		    }
-
-
-                    if(rainbow) {
-                        int randomColor = rand() % 6;
-
-                        switch(randomColor){
-                            case 0:
-                                mcolor = COLOR_GREEN;
-                                break;
-                            case 1:
-                                mcolor = COLOR_BLUE;
-                                break;
-                            case 2:
-                                mcolor = COLOR_BLACK;
-                                break;
-                            case 3:
-                                mcolor = COLOR_YELLOW;
-                                break;
-                            case 4:
-                                mcolor = COLOR_CYAN;
-                                break;
-                            case 5:
-                                mcolor = COLOR_MAGENTA;
-                                break;
-                       }
-                    }
-                    attron(COLOR_PAIR(mcolor));
-                    if (matrix[i][j].val == 1) {
-                        if (bold) {
-                            attron(A_BOLD);
-                        }
-                        addch('|');
-                        if (bold) {
-                            attroff(A_BOLD);
-                        }
-                    } else {
+                    if (matrix[i][j].val == 0 || (matrix[i][j].is_head && !rainbow)) {
                         if (console || xwindow) {
                             attron(A_ALTCHARSET);
                         }
-                        if (bold == 2 ||
-                            (bold == 1 && matrix[i][j].val % 2 == 0)) {
+                        attron(COLOR_PAIR(COLOR_WHITE));
+                        if (bold) {
                             attron(A_BOLD);
                         }
-                        if (matrix[i][j].val == -1) {
-                            addch(' ');
-                        } else if (lambda && matrix[i][j].val != ' ') {
-                            addstr("λ");
+                        if (matrix[i][j].val == 0) {
+                            if (console || xwindow) {
+                                addch(183);
+                            } else {
+                                addch('&');
+                            }
                         } else {
                             addch(matrix[i][j].val);
                         }
-                        if (bold == 2 ||
-                            (bold == 1 && matrix[i][j].val % 2 == 0)) {
+
+                        attroff(COLOR_PAIR(COLOR_WHITE));
+                        if (bold) {
                             attroff(A_BOLD);
                         }
                         if (console || xwindow) {
                             attroff(A_ALTCHARSET);
                         }
+
+                    } else {
+                        if (change_some_lines) {
+                            int lines = which_lines_changed % (COLS - 1); 
+                            if(change_some_lines && lines - j >= 0 && lines - j < 20) {
+                                mcolor = COLOR_MAGENTA;
+                            }
+
+                            else {
+                                mcolor = COLOR_GREEN;
+                            }
+                        }
+
+
+                        if(rainbow) {
+                            int randomColor = rand() % 6;
+
+                            switch(randomColor){
+                                case 0:
+                                    mcolor = COLOR_GREEN;
+                                    break;
+                                case 1:
+                                    mcolor = COLOR_BLUE;
+                                    break;
+                                case 2:
+                                    mcolor = COLOR_BLACK;
+                                    break;
+                                case 3:
+                                    mcolor = COLOR_YELLOW;
+                                    break;
+                                case 4:
+                                    mcolor = COLOR_CYAN;
+                                    break;
+                                case 5:
+                                    mcolor = COLOR_MAGENTA;
+                                    break;
+                            }
+                        }
+                        attron(COLOR_PAIR(mcolor));
+                        if (matrix[i][j].val == 1) {
+                            if (bold) {
+                                attron(A_BOLD);
+                            }
+                            addch('|');
+                            if (bold) {
+                                attroff(A_BOLD);
+                            }
+                        } else {
+                            if (console || xwindow) {
+                                attron(A_ALTCHARSET);
+                            }
+                            if (bold == 2 ||
+                                    (bold == 1 && matrix[i][j].val % 2 == 0)) {
+                                attron(A_BOLD);
+                            }
+                            if (matrix[i][j].val == -1) {
+                                addch(' ');
+                            } else if (lambda && matrix[i][j].val != ' ') {
+                                addstr("λ");
+                            } else {
+                                addch(matrix[i][j].val);
+                            }
+                            if (bold == 2 ||
+                                    (bold == 1 && matrix[i][j].val % 2 == 0)) {
+                                attroff(A_BOLD);
+                            }
+                            if (console || xwindow) {
+                                attroff(A_ALTCHARSET);
+                            }
+                        }
+                        attroff(COLOR_PAIR(mcolor));
                     }
-                    attroff(COLOR_PAIR(mcolor));
                 }
             }
-        }
 
 
-	// How come the cmatrix guy suddenly started using C++ style comments?
-	// And after I just spent 5 minutes getting rid of all of mine?
-	// Sincerely, Yair "Unhappy" Kosowsky-Sachs
-	
-	
-        //check if -M and/or -L was used
-        if (msg[0] != '\0'){
-            //Add our message to the screen
-            int msg_x = LINES/2;
-            int msg_y = COLS/2 - strlen(msg)/2;
-            int i = 0;
+            // How come the cmatrix guy suddenly started using C++ style comments?
+            // And after I just spent 5 minutes getting rid of all of mine?
+            // Sincerely, Yair "Unhappy" Kosowsky-Sachs
 
-            //Add space before message
-            move(msg_x-1, msg_y-2);
-            for(i = 0; i < strlen(msg)+4; i++)
+
+            //check if -M and/or -L was used
+            if (msg[0] != '\0'){
+                //Add our message to the screen
+                int msg_x = LINES/2;
+                int msg_y = COLS/2 - strlen(msg)/2;
+                int i = 0;
+
+                //Add space before message
+                move(msg_x-1, msg_y-2);
+                for(i = 0; i < strlen(msg)+4; i++)
+                    addch(' ');
+
+                //Write message
+                move(msg_x, msg_y-2);
+                addch(' ');
+                addch(' ');
+                addstr(msg);
+                addch(' ');
                 addch(' ');
 
-            //Write message
-            move(msg_x, msg_y-2);
-            addch(' ');
-            addch(' ');
-            addstr(msg);
-            addch(' ');
-            addch(' ');
+                //Add space after message
+                move(msg_x+1, msg_y-2);
+                for(i = 0; i < strlen(msg)+4; i++)
+                    addch(' ');
+            }
 
-            //Add space after message
-            move(msg_x+1, msg_y-2);
-            for(i = 0; i < strlen(msg)+4; i++)
-                addch(' ');
+            napms(update * 10);
         }
-
-        napms(update * 10);
+        finish();
     }
-    finish();
-}
