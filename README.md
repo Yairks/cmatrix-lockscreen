@@ -19,6 +19,11 @@ make
 sudo make install
 ```
 
+### Requirements
+ - You'll need an X server (you're safe if you use Linux or Mac).
+ - Right now, this only supports Gnome-Terminal out of the box. I'll add support for others soon.
+ - It's possible that this could run on Macs. Haven't tried. In order to get it to work, you'll need to uncomment the line for Apple in the ```cmatrix-lockscreen``` file and comment out the Gnome-Terminal line BEFORE installing.
+
 The sudo at the end is necessary, because that's how the program gets the power to validate your password.  
 Yes, this is a mysterious package that is published by some random guy that requires root access to your machine. This isn't malware, I promise. But you take your life in your hands if you dare install this.  
 
