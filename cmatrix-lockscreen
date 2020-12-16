@@ -17,87 +17,134 @@ xset s off # Disables regular screen saver
 xset -dpms # Turn off fancy shmancy auto-suspending. I will do that myself, 
            # thank you very much.
 
+MATRIXDIR=/tmp/cmatrix-lockscreen0101
+LOCKDIR=$MATRIXDIR/locked
+DAEMONLOCKDIR=$MATRIXDIR/daemon
+
+mkdir $MATRIXDIR
+
+# Run the actual matrix
+function run_matrix {
+    if mkdir $LOCKDIR; then
+        mkfifo $LOCKDIR/myfifo
+        # Turn off the display
+        gnome-terminal --full-screen --window-with-profile matrix -- bash -c "sleep 0.4; xtrlock-modified 2> $LOCKDIR/myfifo"
+        sed '/oogyboogy/q' $LOCKDIR/myfifo
+        rm -r $LOCKDIR
+    else
+        echo "Can't run matrix lock screen. Another instance is already running it."
+    fi
+}
+
+# Get rid of lock directory
+function cleanup {
+    rm -r $MATRIXDIR 
+}
+
 case $1 in 
-    "suspend")
-    # Turn off the display
-    gnome-terminal --full-screen --window-with-profile matrix -- bash -c 'sleep 0.4; xtrlock-modified'
-    xset dpms force suspend
+    "")
+#    if mkdir $LOCKDIR; then
+        # Turn off the display
+#        gnome-terminal --full-screen --window-with-profile matrix -- bash -c 'sleep 0.4; xtrlock-modified'
+#        rmdir $LOCKDIR
+#    fi
+    run_matrix
     ;;
 
-    "" | "-d" | "--daemon")
+    "suspend")
+#    if mkdir $LOCKDIR; then
+#        # Turn off the display and suspend
+#        gnome-terminal --full-screen --window-with-profile matrix -- bash -c 'sleep 0.4; xtrlock-modified'
+         xset dpms force suspend & run_matrix
+#        rmdir $LOCKDIR
+#    fi
+    ;;
+
+    "-d" | "--daemon")
     # Run as a daemon
-while true; do
-    # If idle for 20 minutes, put machine in standby.
-    if (( $(xprintidle) >= 1200000 )); then
-        xset dpms force suspend
+    if mkdir $DAEMONLOCKDIR; then
+        trap "cleanup" EXIT
 
-    # If idle for 9 minutes, ask if the user wants the screensaver.
-    # In all likelihood, I'll just have been watching a movie or something,
-    # and turn off the screensaver for an hour. But if I'm aways from the 
-    # computer and was too lazy to press $mod+grave, then wait a minute and 
-    # turn on the screensaver
-    elif (( $(xprintidle) >= 540000 )); then
-        # The menu will write to a temp file.
-        # This is needed because the menu is blocking and 
-        # We need to monitor if the user hasn't chosen an 
-        # option after 1 minute.
-        directory=$(mktemp -d --tmpdir screensaving.XXXXX)
-        
-        # In a backgrounded subshell, show the menu.
-        ( 
-             action=$(printf "Turn off lockscreen for 10 minutes\nTurn off lockscreen for an hour\nTurn off lockscreen for 24 hours\nExit screensaver\nTurn on lockscreen\nToo many options! Can't think!" | rofi -i -dmenu -no-custom -p "Screen has been idle for 10 minutes")
-            echo $action > $directory/action_selected
+        while true; do
+            # If idle for 20 minutes, put machine in standby.
+            if (( $(xprintidle) >= 1200000 )); then
+                xset dpms force suspend
 
-        ) & 
-        
-        # Keep track of how long it's been since the menu was shown.
-        time=$(date +%s)
+            # If idle for 9 minutes, ask if the user wants the screensaver.
+            # In all likelihood, I'll just have been watching a movie or something,
+            # and turn off the screensaver for an hour. But if I'm aways from the 
+            # computer and was too lazy to press $mod+grave, then wait a minute and 
+            # turn on the screensaver
+            elif (( $(xprintidle) >= 540000 )); then
+                # The menu will write to a temp file.
+                # This is needed because the menu is blocking and 
+                # We need to monitor if the user hasn't chosen an 
+                # option after 1 minute.
+                
+                # In a backgrounded subshell, show the menu.
+                ( 
+                     action=$(printf "Turn off lockscreen for 10 minutes\nTurn off lockscreen for an hour\nTurn off lockscreen for 24 hours\nExit screensaver\nTurn on lockscreen\nToo many options! Can't think!" | rofi -i -dmenu -no-custom -p "Screen has been idle for 10 minutes")
+                    echo $action > $MATRIXDIR/action_selected
 
-        # Check if the file we've agread to write to exists yet.
-        while [[ ! -f $directory/action_selected ]]; do
+                ) & 
+                
+                # Keep track of how long it's been since the menu was shown.
+                time=$(date +%s)
 
-            if (( $(date +%s) - time > 60 )); then
-                # After one minute, the user is probably not there. Type in 
-                # "Turn on lockscreen" for the user.
-                # You're welcome.
-                xdotool key T u r n space o n space l o c k s c r e e n Return Return
-            else
-                sleep 1
+                # Check if the file we've agread to write to exists yet.
+                while [[ ! -f $MATRIXDIR/action_selected ]]; do
+
+                    if (( $(date +%s) - time > 60 )); then
+                        # After one minute, the user is probably not there. Type in 
+                        # "Turn on lockscreen" for the user.
+                        # You're welcome.
+                        xdotool key T u r n space o n space l o c k s c r e e n Return Return
+                    else
+                        sleep 1
+                    fi
+                done
+                
+                # Now, either the user has selected an option and it was 
+                # written to our file, or they didn't select an option and 
+                # we chose one for them. Either way, that action is in
+                # this file.
+                action=$(cat $MATRIXDIR/action_selected)
+                case $action in 
+                    'Turn off lockscreen for 10 minutes')
+                        ;; # Interestingly, there's nothing to do here, because the user has
+                           # just reset their xidletime just by choosing an option.
+                    'Turn off lockscreen for an hour')
+                        sleep 3600 
+                    ;;
+
+                    'Turn off lockscreen for 24 hours')
+                        sleep 86400
+                    ;;
+
+                    'Turn on lockscreen')
+#                        if mkdir $LOCKDIR; then
+#                            # Turn on the cmatrix display
+#                            gnome-terminal --full-screen --window-with-profile matrix -- bash -c 'sleep 0.4; xtrlock-modified'
+#                            rmdir $LOCKDIR
+#                        fi
+                        run_matrix
+                    ;;
+                    
+                    'Exit screensaver')
+                        # The user must be unhappy. Sorry. I'll go now.
+                        exit 0
+                    ;;
+                esac 
             fi
+            # See you in a minute
+            sleep 60
         done
         
-        # Now, either the user has selected an option and it was 
-        # written to our file, or they didn't select an option and 
-        # we chose one for them. Either way, that action is in
-        # this file.
-        action=$(cat $directory/action_selected)
-        case $action in 
-            'Turn off lockscreen for 10 minutes')
-                ;; # Interestingly, there's nothing to do here, because the user has
-                   # just reset their xidletime just by choosing an option.
-            'Turn off lockscreen for an hour')
-                sleep 3600 
-            ;;
-
-            'Turn off lockscreen for 24 hours')
-                sleep 86400
-            ;;
-
-            'Turn on lockscreen')
-                # Turn on the cmatrix display
-                gnome-terminal --full-screen --window-with-profile matrix -- bash -c 'sleep 0.4; xtrlock-modified'
-            ;;
-            
-            'Exit screensaver')
-                # The user must be unhappy. Sorry. I'll go now.
-                exit 0
-            ;;
-        esac 
+        rmdir $DAEMONLOCKDIR
+    else
+        echo "\nCan't start daemon. Another cmatrix-lockscreen daemon is already running."
     fi
-    # See you in a minute
-    sleep 60
-done
-;;
+    ;;
 esac
 # I find it so interesting that we still call it a screensaver, as though 
 # our screens still need saving to prevent the monitor from degrading.
