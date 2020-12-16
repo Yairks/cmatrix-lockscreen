@@ -336,7 +336,6 @@ if (pid > 0) { /* Parent */
                  * password
                  */
                 putchar('@');
-                putchar('z');
                 fflush(stdout);
 
                 if (ev.xkey.time < timeout) { XBell(display,0); break; }
@@ -345,6 +344,8 @@ if (pid > 0) { /* Parent */
                     case XK_Escape: case XK_Clear:
                         rlen=0; break;
                     case XK_Delete: case XK_BackSpace:
+                        putchar('z');
+                        fflush(stdout);
                         if (rlen>0) rlen--;
                         break;
                     case XK_Linefeed: case XK_Return:
@@ -372,6 +373,8 @@ if (pid > 0) { /* Parent */
                     default:
                         if (clen != 1) break;
                         /* allow space for the trailing \0 */
+                        putchar('z');
+                        fflush(stdout);
                         if (rlen < (sizeof(rbuf) - 1)){
                             rbuf[rlen]=cbuf[0];
                             rlen++;
