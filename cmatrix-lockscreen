@@ -55,7 +55,12 @@ case $1 in
 #    if mkdir $LOCKDIR; then
 #        # Turn off the display and suspend
 #        gnome-terminal --full-screen --window-with-profile matrix -- bash -c 'sleep 0.4; xtrlock-modified'
-         xset dpms force suspend & run_matrix
+        xset dpms force suspend & 
+        
+        run_matrix
+        
+        xset -dpms
+        xset s off
 #        rmdir $LOCKDIR
 #    fi
     ;;
