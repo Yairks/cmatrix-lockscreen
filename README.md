@@ -29,7 +29,7 @@ To get the requirements on Ubuntu (sorry guys, it's the only package manager I k
 ```
 sudo apt update
 sudo apt upgrade
-sudo apt install gcc make libncurses-dev xorg openbox libx11-dev autoconf
+sudo apt install gcc make libncurses-dev xorg openbox libx11-dev autoconf rofi
 ```
 
 The sudo at the end of the install is necessary, because that's how the program gets the power to validate your password.  
