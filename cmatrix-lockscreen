@@ -24,6 +24,8 @@ DAEMONLOCKDIR=$MATRIXDIR/daemon
 mkdir $MATRIXDIR
 
 # Run the actual matrix
+# This function is blocking. It won't return until
+# the user successfully enters their password
 function run_matrix {
     if mkdir $LOCKDIR; then
         mkfifo $LOCKDIR/myfifo
@@ -71,8 +73,8 @@ case $1 in
         trap "cleanup" EXIT
 
         while true; do
-            # If idle for 20 minutes, put machine in standby.
-            if (( $(xprintidle) >= 1200000 )); then
+            # If idle for 15 minutes, put machine in standby.
+            if (( $(xprintidle) >= 900000 )); then
                 xset dpms force suspend
 
             # If idle for 9 minutes, ask if the user wants the screensaver.
@@ -133,6 +135,11 @@ case $1 in
 #                            rmdir $LOCKDIR
 #                        fi
                         run_matrix
+                        
+                        # It's possible that the suspend mechanism was 
+                        # activated if the user was idle for a long time
+                        xset -dpms
+                        xset s off
                     ;;
                     
                     'Exit screensaver')
