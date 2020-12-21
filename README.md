@@ -23,8 +23,16 @@ sudo make install
  - You'll need an X server (you're safe if you use Linux or Mac).
  - Right now, this only supports Gnome-Terminal out of the box. I'll add support for others soon.
  - It's possible that this could run on Macs. Haven't tried. In order to get it to work, you'll need to uncomment the line for Apple in the ```cmatrix-lockscreen``` file and comment out the Gnome-Terminal line BEFORE installing.
+ - This program does run on WSL1, although it's not very interesting, because while the terminal window does lock up, you can always just exit it.
 
-The sudo at the end is necessary, because that's how the program gets the power to validate your password.  
+To get the requirements on Ubuntu (sorry guys, it's the only package manager I know) run:
+```
+sudo apt update
+sudo apt upgrade
+sudo apt install gcc make libncurses-dev xorg openbox libx11-dev autoconf
+```
+
+The sudo at the end of the install is necessary, because that's how the program gets the power to validate your password.  
 Yes, this is a mysterious package that is published by some random guy that requires root access to your machine. This isn't malware, I promise. But you take your life in your hands if you dare install this.  
 
 TODO: somehow show that I haven't put in any malware. Maybe with a diff of the [original program](https://salsa.debian.org/debian/xtrlock).  
