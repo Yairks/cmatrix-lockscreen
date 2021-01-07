@@ -29,9 +29,15 @@ mkdir $MATRIXDIR
 function run_matrix {
     if mkdir $LOCKDIR; then
         mkfifo $LOCKDIR/myfifo
-        # Turn off the display
+        
+        xset dpms
+
         gnome-terminal --full-screen --window-with-profile matrix -- bash -c "sleep 0.4; xtrlock-modified 2> $LOCKDIR/myfifo"
+
         sed '/oogyboogy/q' $LOCKDIR/myfifo
+        
+        xset -dpms
+
         rm -r $LOCKDIR
     else
         echo "Can't run matrix lock screen. Another instance is already running it."
@@ -57,11 +63,10 @@ case $1 in
 #    if mkdir $LOCKDIR; then
 #        # Turn off the display and suspend
 #        gnome-terminal --full-screen --window-with-profile matrix -- bash -c 'sleep 0.4; xtrlock-modified'
-        xset dpms force suspend & 
+        xset force suspend & 
         
         run_matrix
         
-        xset -dpms
         xset s off
 #        rmdir $LOCKDIR
 #    fi
@@ -72,17 +77,27 @@ case $1 in
     if mkdir $DAEMONLOCKDIR; then
         trap "cleanup" EXIT
 
+        ( 
+            while true; do
+                if [[ $(cat /proc/acpi/button/lid/LID0/state | grep close) ]]; then 
+                   run_matrix 
+                fi
+                
+                sleep 3
+            done
+        ) &
+
         while true; do
             # If idle for 15 minutes, put machine in standby.
-            if (( $(xprintidle) >= 900000 )); then
-                xset dpms force suspend
+            # if (( $(xprintidle) >= 900000 )); then
+            #     xset dpms force suspend
 
             # If idle for 9 minutes, ask if the user wants the screensaver.
             # In all likelihood, I'll just have been watching a movie or something,
             # and turn off the screensaver for an hour. But if I'm aways from the 
             # computer and was too lazy to press $mod+grave, then wait a minute and 
             # turn on the screensaver
-            elif (( $(xprintidle) >= 540000 )); then
+            if (( $(xprintidle) > 540000 )); then
                 # The menu will write to a temp file.
                 # This is needed because the menu is blocking and 
                 # We need to monitor if the user hasn't chosen an 
@@ -138,7 +153,6 @@ case $1 in
                         
                         # It's possible that the suspend mechanism was 
                         # activated if the user was idle for a long time
-                        xset -dpms
                         xset s off
                     ;;
                     
@@ -147,6 +161,9 @@ case $1 in
                         exit 0
                     ;;
                 esac 
+
+                rm $MATRIXDIR/action_selected
+                
             fi
             # See you in a minute
             sleep 60
